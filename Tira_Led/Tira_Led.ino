@@ -1,17 +1,10 @@
 
-#include <Adafruit_NeoPixel.h>    // importa libreria
+#include <Adafruit_NeoPixel.h> 
 
 // Primer parametro = cantidad de pixeles en la tira
 // Segundo parametro = pin de conexion a Arduino
-// Tercer parametro:
-//   NEO_KHZ800  800 KHz velocidad de datos (WS2812 y nuevos)
-//   NEO_KHZ400  400 KHz velocidad de datos (WS2811 y mas antiguos)
-//   NEO_GRB     flujo de datos en orden GRB (WS2812 y nuevos)
-//   NEO_RGB     flujo de datos en orden RGB (versiones mas antiguas)
-
-Adafruit_NeoPixel tira = Adafruit_NeoPixel(8, 12, NEO_GRB + NEO_KHZ800); // creacion de objeto "tira"
-// con una cantidad de 8 pixeles, sobre pin 2 de Arduino y configurado para WS2812
-
+Adafruit_NeoPixel tira = Adafruit_NeoPixel(8, 12, NEO_GRB + NEO_KHZ800); 
+ 
 void setup(){
   Serial.begin(9600);
   tira.begin();       // inicializacion de la tira
