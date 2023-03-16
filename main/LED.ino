@@ -14,5 +14,7 @@ void setupLed() {
 
 
 void handleLed(int counter){
-  
+  if(counter < 4) {
+      tira.setPixelColor(i, 0, 255, 0);   // cada pixel en color azul (posicion,R,G,B)
+  }
 }
