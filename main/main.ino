@@ -1,9 +1,9 @@
 #include <NewPing.h>
 
-#define LEFT_TRIG_PIN 2
-#define LEFT_ECHO_PIN 3
-#define RIGHT_TRIG_PIN 4
-#define RIGHT_ECHO_PIN 5
+#define LEFT_TRIG_PIN 22
+#define LEFT_ECHO_PIN 19
+#define RIGHT_TRIG_PIN 23
+#define RIGHT_ECHO_PIN 18
 
 #define MAX_DISTANCE 200
 
@@ -36,12 +36,12 @@ void loop() {
   Serial.println(" cm");
   
   // Check if the left sensor is less than 10 cm away
-  if (leftDistance < 10) {
+  if (leftDistance > 10 && leftDistance < 50) {
     leftSensorActivated = true;
   }
   
   // Check if the right sensor is less than 10 cm away
-  if (rightDistance < 10) {
+  if (rightDistance > 10 && rightDistance < 50) {
     rightSensorActivated = true;
   }
   
@@ -65,7 +65,7 @@ void loop() {
       counter--;
     }
   }
-  
+  Serial.println(counter);
   // Wait for a short time before repeating the loop
   delay(100);
 }
