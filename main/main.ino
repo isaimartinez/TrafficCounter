@@ -7,6 +7,9 @@
 
 #define MAX_DISTANCE 200
 
+#define maxTol = 100
+#define minTol = 15
+
 NewPing leftSensor(LEFT_TRIG_PIN, LEFT_ECHO_PIN, MAX_DISTANCE);
 NewPing rightSensor(RIGHT_TRIG_PIN, RIGHT_ECHO_PIN, MAX_DISTANCE);
 
@@ -34,38 +37,43 @@ void loop() {
   Serial.print(" cm, right distance: ");
   Serial.print(rightDistance);
   Serial.println(" cm");
-  
-  // Check if the left sensor is less than 10 cm away
-  if (leftDistance > 10 && leftDistance < 50) {
-    leftSensorActivated = true;
-  }
-  
-  // Check if the right sensor is less than 10 cm away
-  if (rightDistance > 10 && rightDistance < 50) {
-    rightSensorActivated = true;
-  }
-  
-  // Wait until both sensors are activated
-  if (leftSensorActivated && rightSensorActivated) {
-    // Check if both sensors are less than 10 cm away
-    if (leftDistance < 10 && rightDistance < 10) {
-      increase = true;
-    } else {
-      increase = false;
+
+
+
+  if(leftSensorActivated) {
+    if(rightDistance > minTol && rightDistance < maxTol) {
+      Serial.println("Entra");
+      counter++;
+      rightSensorActivated = false;
+      leftSensorActivated = false;
+      Serial.println(counter);
     }
   }
-  
-  // Debugging output
-  if (increase) {
-    Serial.println("Increase");
-    counter++;
-  } else {
-    Serial.println("Decrease");
-    if(counter > 0) {
-      counter--;
+
+  if(rightSensorActivated) {
+    if(leftDistance > minTol && leftDistance < maxTol) {
+      if(counter > 0) {
+        Serial.println("Sale");
+        counter--;
+        rightSensorActivated = false;
+        leftSensorActivated = false;
+        Serial.println(counter);
+      }
     }
   }
-  Serial.println(counter);
+
+  if(!leftSensorActivated && !rightSensorActivated) {
+    // Check if the left sensor is less than 10 cm away
+    if (leftDistance > minTol && leftDistance < maxTol) {
+      leftSensorActivated = true;
+    }
+    
+    // Check if the right sensor is less than 10 cm away
+    if (rightDistance > minTol && rightDistance < maxTol) {
+      rightSensorActivated = true;
+    }
+  }
+
   // Wait for a short time before repeating the loop
   delay(100);
 }
