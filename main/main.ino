@@ -7,8 +7,10 @@
 
 #define MAX_DISTANCE 200
 
-#define maxTol = 100
-#define minTol = 15
+#define maxTol 100
+#define minTol 15
+
+void printDistances();
 
 NewPing leftSensor(LEFT_TRIG_PIN, LEFT_ECHO_PIN, MAX_DISTANCE);
 NewPing rightSensor(RIGHT_TRIG_PIN, RIGHT_ECHO_PIN, MAX_DISTANCE);
@@ -30,16 +32,8 @@ void loop() {
   
   // Measure the distance from the right sensor
   int rightDistance = rightSensor.ping_cm();
-  
-  // Debugging output
-  Serial.print("Left distance: ");
-  Serial.print(leftDistance);
-  Serial.print(" cm, right distance: ");
-  Serial.print(rightDistance);
-  Serial.println(" cm");
 
-
-
+  printDistances(leftDistance, rightDistance);
   if(leftSensorActivated) {
     if(rightDistance > minTol && rightDistance < maxTol) {
       Serial.println("Entra");
