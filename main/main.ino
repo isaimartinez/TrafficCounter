@@ -10,36 +10,35 @@
 #define maxTol 100
 #define minTol 15
 
+//=====  DEBUG ======
 void printDistances();
 void printStage();
+//=====  UTILS ======
 bool isSensorActivated();
 void reset();
+//====== LED ======
+void setupLed();
 
 NewPing leftSensor(LEFT_TRIG_PIN, LEFT_ECHO_PIN, MAX_DISTANCE);
 NewPing rightSensor(RIGHT_TRIG_PIN, RIGHT_ECHO_PIN, MAX_DISTANCE);
 
 int counter = 0;
-
 bool leftSensorActivated = false;
 bool rightSensorActivated = false;
 int stage = 0;
 
 void setup() {
-  // Initialize the serial connection for debugging
   Serial.begin(9600);
+  setupLed();
 }
 
 void loop() {
-  // Measure the distance from the left sensor
   int leftDistance = leftSensor.ping_cm();
-  
-  // Measure the distance from the right sensor
   int rightDistance = rightSensor.ping_cm();
-  
-  printDistances(leftDistance, rightDistance);
-
   bool isLeftSensorActivated = isSensorActivated(leftDistance);
   bool isRightSensorActivated = isSensorActivated(rightDistance);
+  
+  printDistances(leftDistance, rightDistance);
 
   switch (stage) {
     case 0:
@@ -91,13 +90,10 @@ void loop() {
         }
       }
     default:
-      // if nothing else matches, do the default
-      // default is optional
       break;
   }
-  
-  
 
-  // Wait for a short time before repeating the loop
+  printStage();
+
   delay(100);
 }

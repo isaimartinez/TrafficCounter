@@ -1,6 +1,4 @@
 #include <Adafruit_NeoPixel.h> 
-// Primer parametro = cantidad de pixeles en la tira
-// Segundo parametro = pin de conexion a Arduino
 Adafruit_NeoPixel tira = Adafruit_NeoPixel(8, 12, NEO_GRB + NEO_KHZ800); 
 
 
@@ -11,20 +9,20 @@ int getPixel() {
 }
 
 void setupLed() {
-  tira.begin();       // inicializacion de la tira
-  tira.show();        // muestra datos en pixel
-  tira.setBrightness(20);               // brillo global para toda la tira
+  tira.begin();       
+  tira.show();
+  tira.setBrightness(20);
 }
 
 
 void handleLed(){
   int pixel = getPixel();
   if(pixel <= 2) {
-    tira.setPixelColor(pixel, 0, 255, 0);   // cada pixel en color azul (posicion,R,G,B)
+    tira.setPixelColor(pixel, 0, 255, 0);
   } else if(pixel <=5) {
-    tira.setPixelColor(pixel, 252, 232, 3);   // cada pixel en color azul (posicion,R,G,B)
+    tira.setPixelColor(pixel, 252, 232, 3);
   } else {
-    tira.setPixelColor(pixel, 255, 0, 0);   // cada pixel en color azul (posicion,R,G,B)
+    tira.setPixelColor(pixel, 255, 0, 0);
   }
-  tira.show();      // muestra datos en pixel 
+  tira.show();
 }
