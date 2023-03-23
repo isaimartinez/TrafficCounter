@@ -1,4 +1,4 @@
-#include <NewPing.h>
+ #include <NewPing.h>
 
 #define LEFT_TRIG_PIN 22
 #define LEFT_ECHO_PIN 19
@@ -11,15 +11,18 @@
 #define minTol 15
 
 void printDistances();
+void printStage();
+bool isSensorActivated();
+void reset();
 
 NewPing leftSensor(LEFT_TRIG_PIN, LEFT_ECHO_PIN, MAX_DISTANCE);
 NewPing rightSensor(RIGHT_TRIG_PIN, RIGHT_ECHO_PIN, MAX_DISTANCE);
 
-bool increase = false;
 int counter = 0;
 
 bool leftSensorActivated = false;
 bool rightSensorActivated = false;
+int stage = 0;
 
 void setup() {
   // Initialize the serial connection for debugging
@@ -32,41 +35,68 @@ void loop() {
   
   // Measure the distance from the right sensor
   int rightDistance = rightSensor.ping_cm();
-
+  
   printDistances(leftDistance, rightDistance);
-  if(leftSensorActivated) {
-    if(rightDistance > minTol && rightDistance < maxTol) {
-      Serial.println("Entra");
-      counter++;
-      rightSensorActivated = false;
-      leftSensorActivated = false;
-      Serial.println(counter);
-    }
-  }
 
-  if(rightSensorActivated) {
-    if(leftDistance > minTol && leftDistance < maxTol) {
-      if(counter > 0) {
-        Serial.println("Sale");
-        counter--;
-        rightSensorActivated = false;
-        leftSensorActivated = false;
-        Serial.println(counter);
+  bool isLeftSensorActivated = isSensorActivated(leftDistance);
+  bool isRightSensorActivated = isSensorActivated(rightDistance);
+
+  switch (stage) {
+    case 0:
+      if(!leftSensorActivated && !rightSensorActivated) {
+        if (isLeftSensorActivated) {
+          leftSensorActivated = true;
+          stage = 1;
+          break;
+        }
+        
+        if (isRightSensorActivated) {
+          rightSensorActivated = true;
+          stage = 1;
+          break;
+        }
       }
-    }
+    case 1:
+      if(leftSensorActivated && !rightSensorActivated || rightSensorActivated && !leftSensorActivated) {
+        if(isLeftSensorActivated && isRightSensorActivated){
+          stage = 2;
+           break;
+        } else {
+          reset();
+          break;
+        }
+      }
+    case 2:
+      if(leftSensorActivated && isRightSensorActivated || rightSensorActivated && isLeftSensorActivated) {
+         stage = 3;
+         break;
+      } 
+      else if(isLeftSensorActivated && isRightSensorActivated) {
+        stage = 2;
+        break;
+      }
+    case 3:
+      if(leftSensorActivated) {
+        counter++;
+        Serial.println("ENTRA =====>>>>>");
+        reset();
+        break;
+      }
+      if(rightSensorActivated) {
+        if(counter > 0) {
+          counter--;
+          Serial.println("<<<<===== SALE");
+          reset();
+          break;
+        }
+      }
+    default:
+      // if nothing else matches, do the default
+      // default is optional
+      break;
   }
-
-  if(!leftSensorActivated && !rightSensorActivated) {
-    // Check if the left sensor is less than 10 cm away
-    if (leftDistance > minTol && leftDistance < maxTol) {
-      leftSensorActivated = true;
-    }
-    
-    // Check if the right sensor is less than 10 cm away
-    if (rightDistance > minTol && rightDistance < maxTol) {
-      rightSensorActivated = true;
-    }
-  }
+  
+  
 
   // Wait for a short time before repeating the loop
   delay(100);

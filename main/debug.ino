@@ -6,3 +6,8 @@ void printDistances(int l, int r) {
   Serial.print(r);
   Serial.println(" cm");
 }
+
+void printStage(){
+  Serial.print("Stage ");  
+  Serial.println(stage);
+}
