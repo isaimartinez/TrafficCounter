@@ -10,4 +10,5 @@ void reset() {
   stage = 0;
   leftSensorActivated = false;
   rightSensorActivated = false;
+  nTryes = 0;
 }

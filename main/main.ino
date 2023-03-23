@@ -8,21 +8,26 @@
 #define MAX_DISTANCE 200
 
 #define maxTol 100
-#define minTol 15
+#define minTol 5
 
 //=====  DEBUG ======
 void printDistances();
 void printStage();
+void printIsActivated();
+void printCounter();
+void printDirection();
 //=====  UTILS ======
 bool isSensorActivated();
 void reset();
 //====== LED ======
 void setupLed();
+void handleLed();
 
 NewPing leftSensor(LEFT_TRIG_PIN, LEFT_ECHO_PIN, MAX_DISTANCE);
 NewPing rightSensor(RIGHT_TRIG_PIN, RIGHT_ECHO_PIN, MAX_DISTANCE);
 
 int counter = 0;
+int nTryes = 0;
 bool leftSensorActivated = false;
 bool rightSensorActivated = false;
 int stage = 0;
@@ -38,8 +43,11 @@ void loop() {
   bool isLeftSensorActivated = isSensorActivated(leftDistance);
   bool isRightSensorActivated = isSensorActivated(rightDistance);
   
-  printDistances(leftDistance, rightDistance);
-
+  
+  //printDistances(leftDistance, rightDistance);
+  //printIsActivated(isLeftSensorActivated, isRightSensorActivated);
+  //printDirection();
+  Serial.println("loop");
   switch (stage) {
     case 0:
       if(!leftSensorActivated && !rightSensorActivated) {
@@ -56,12 +64,17 @@ void loop() {
         }
       }
     case 1:
+      Serial.println("Has to be after loop");
       if(leftSensorActivated && !rightSensorActivated || rightSensorActivated && !leftSensorActivated) {
         if(isLeftSensorActivated && isRightSensorActivated){
           stage = 2;
           break;
         } else {
-          reset();
+          if(nTryes > 10) {
+            reset();
+          } else {
+            nTryes++;
+          }
           break;
         }
       }
@@ -71,29 +84,33 @@ void loop() {
         break;
       } 
       else if(isLeftSensorActivated && isRightSensorActivated) {
-        stage = 2;
+        stage = 1;
         break;
       }
     case 3:
       if(leftSensorActivated) {
         counter++;
-        Serial.println("ENTRA =====>>>>>");
+        Serial.println("ENTRA ====================>>>>>");
+        Serial.println("                  ");
         reset();
         break;
       }
       if(rightSensorActivated) {
         if(counter > 0) {
           counter--;
-          Serial.println("<<<<===== SALE");
-          reset();
-          break;
+          Serial.println("<<<<==================== SALE");
+          Serial.println("                  ");
         }
+        reset();
+        break;
       }
     default:
       break;
   }
 
   printStage();
+  printCounter();
+  handleLed();
 
-  delay(100);
+  delay(250);
 }
