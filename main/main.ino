@@ -60,7 +60,7 @@ void loop() {
       if(leftSensorActivated && !rightSensorActivated || rightSensorActivated && !leftSensorActivated) {
         if(isLeftSensorActivated && isRightSensorActivated){
           stage = 2;
-           break;
+          break;
         } else {
           reset();
           break;
@@ -68,8 +68,8 @@ void loop() {
       }
     case 2:
       if(leftSensorActivated && isRightSensorActivated || rightSensorActivated && isLeftSensorActivated) {
-         stage = 3;
-         break;
+        stage = 3;
+        break;
       } 
       else if(isLeftSensorActivated && isRightSensorActivated) {
         stage = 2;
