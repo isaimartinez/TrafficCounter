@@ -17,12 +17,15 @@ void setupLed() {
 
 void handleLed(){
   int pixel = getPixel();
-  if(pixel <= 2) {
-    tira.setPixelColor(pixel, 0, 255, 0);
-  } else if(pixel <=5) {
-    tira.setPixelColor(pixel, 252, 232, 3);
-  } else {
-    tira.setPixelColor(pixel, 255, 0, 0);
+  for(int i = 0; i < pixel; i++){
+    if(i <= 2) {
+      tira.setPixelColor(i, 0, 255, 0);
+    } else if(i <=5) {
+      tira.setPixelColor(i, 252, 232, 3);
+    } else {
+      tira.setPixelColor(i, 255, 0, 0);
+    }
+    tira.show();
   }
-  tira.show();
+  tira.clear();
 }
